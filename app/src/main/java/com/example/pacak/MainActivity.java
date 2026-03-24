@@ -17,8 +17,11 @@ public class MainActivity extends AppCompatActivity {
     Button button;
     TextView czas;
     TextView punkty;
-
+    CountDownTimer countDownTimer;
     Random random = new Random();
+
+
+
     Handler handler = new Handler();
 
     int punktyValue = 0;
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         tablica[7] = findViewById(R.id.imageView8);
         tablica[8] = findViewById(R.id.imageView9);
 
-        // kliknięcie jabłka
+
         for (ImageView img : tablica) {
             img.setOnClickListener(v -> {
                 if (graTrwa && v == aktualneJablko) {
@@ -62,17 +65,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void startGry() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
+        handler.removeCallbacksAndMessages(null);
+
         punktyValue = 0;
         punkty.setText("0");
         graTrwa = true;
 
-        // schowaj wszystko
         for (ImageView img : tablica) {
             img.setVisibility(ImageView.INVISIBLE);
         }
 
-        // timer 20 sekund
-        new CountDownTimer(20000, 1000) {
+        countDownTimer = new CountDownTimer(20000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 czas.setText(String.valueOf(millisUntilFinished / 1000));
@@ -85,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (aktualneJablko != null) {
                     aktualneJablko.setVisibility(ImageView.INVISIBLE);
+                    aktualneJablko = null;
                 }
             }
         }.start();
